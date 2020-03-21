@@ -18,4 +18,4 @@ RUN yum install -y --setopt=tsflags=nodocs epel-release && \
 EXPOSE 80
 EXPOSE 443
 
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/entrypoint.sh" ]
