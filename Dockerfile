@@ -1,14 +1,12 @@
-FROM centos:centos7
+FROM centos:7.7.1908
 
-ARG DOMAIN=bradleyalanprice.com
 ARG NGINX_VERSION="1.17.0"
 
 COPY nginx.repo /etc/yum.repos.d/nginx.repo
-COPY entrypoint.sh /entrypoint.sh
+COPY nginx.conf /etc/nginx/nginx.conf
 
 RUN yum install -y --setopt=tsflags=nodocs epel-release && \
-    yum install -y --setopt=tsflags=nodocs inotify-tools && \
-    yum install -y --setopt=tsflags=nodocs nginx-$NGINX_VERSION && \
+    yum install -y --setopt=tsflags=nodocs inotify-tools nginx-$NGINX_VERSION && \
     rm /etc/nginx/conf.d/default.conf && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log && \
@@ -18,4 +16,4 @@ RUN yum install -y --setopt=tsflags=nodocs epel-release && \
 EXPOSE 80
 EXPOSE 443
 
-ENTRYPOINT [ "bash", "/entrypoint.sh" ]
+CMD ["nginx", "-g", "daemon off;"]
