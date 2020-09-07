@@ -13,15 +13,18 @@ docker-build-master:
     - master
 
 docker-build:
-  # Official docker image.
-  image: docker:latest
-  stage: build
+  image: docker/compose:1.25.4
+  stage: build 
   services:
     - docker:dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  variables:
+    NGINX_CENTOS_IMAGE: ${CI_REGISTRY_IMAGE}:centos-${CI_COMMIT_REF_SLUG}
+    NGINX_ALPINE_IMAGE: ${CI_REGISTRY_IMAGE}:alpine-${CI_COMMIT_REF_SLUG}
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
-    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    - docker-compose build --parallel
+    - docker-compose push
   except:
     - master
+    
