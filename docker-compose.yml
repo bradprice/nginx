@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+
+  nginx-centos:
+    image: "${NGINX_CENTOS_IMAGE}"
+    build:
+      context: .
+      dockerfile: Dockerfile-centos    
+
+  nginx-alpine:
+    image: "${NGINX_ALPINE_IMAGE}"
+    build:
+      context: .
+      dockerfile: Dockerfile-alpine
