@@ -1,14 +1,16 @@
 docker-build-master:
-  # Official docker image.
-  image: docker:latest
-  stage: build
+  image: docker/compose:1.26.2
+  stage: build 
   services:
     - docker:dind
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  variables:
+    NGINX_CENTOS_IMAGE: ${CI_REGISTRY_IMAGE}:centos
+    NGINX_ALPINE_IMAGE: ${CI_REGISTRY_IMAGE}:alpine
   script:
-    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker-compose build --parallel
+    - docker-compose push
   only:
     - master
 
@@ -27,4 +29,5 @@ docker-build:
     - docker-compose push
   except:
     - master
+
     
